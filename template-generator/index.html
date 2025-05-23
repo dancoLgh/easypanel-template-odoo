@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Odoo Template Configurator Pro+</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="header navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#" data-translate-key="appTitle"
+          ><i class="bi bi-box-seam"></i> Odoo EasyPanel Temple App</a
+        >
+        <div class="d-flex align-items-center">
+          <div class="language-switcher me-3">
+            <label
+              for="languageSelect"
+              class="form-label mb-0"
+              data-translate-key="languageLabel"
+              >Idioma:</label
+            >
+            <select class="form-select form-select-sm" id="languageSelect">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="theme-toggle-group">
+            <i class="bi bi-sun-fill theme-icon-sun me-1" id="sunIcon"></i>
+            <div
+              class="form-check form-switch p-0 m-0 d-flex align-items-center">
+              <input
+                class="form-check-input m-0"
+                type="checkbox"
+                role="switch"
+                id="darkModeToggle" />
+              <label
+                class="form-check-label visually-hidden"
+                for="darkModeToggle"
+                data-translate-key="darkModeLabel"
+                >Dark Mode</label
+              >
+            </div>
+            <i
+              class="bi bi-moon-stars-fill theme-icon-moon ms-1"
+              id="moonIcon"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <div class="json-pane">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 data-translate-key="generatedConfigTitle">
+            <i class="bi bi-filetype-json"></i> Generated Configuration
+          </h3>
+          <button
+            id="copyBtn"
+            class="btn btn-outline-secondary"
+            data-translate-key="copyJsonButton">
+            <i class="bi bi-clipboard-check"></i> Copy JSON
+          </button>
+        </div>
+        <pre id="jsonOutput" data-translate-key="jsonOutputPlaceholder">
+Your JSON will appear here...</pre
+        >
+      </div>
+
+      <div class="options-pane">
+        <h3 class="mb-4" data-translate-key="deploymentSettingsTitle">
+          <i class="bi bi-sliders"></i> Deployment Settings
+        </h3>
+        <form id="templateForm">
+          <div class="form-section">
+            <h4
+              class="form-section-title"
+              data-translate-key="coreServicesTitle">
+              Core Services
+            </h4>
+            <div class="mb-3">
+              <label
+                for="appServiceName"
+                class="form-label"
+                data-translate-key="odooServiceNameLabel"
+                >Odoo Service Name *</label
+              >
+              <input
+                type="text"
+                id="appServiceName"
+                class="form-control"
+                value="-odoo"
+                placeholder="e.g., my-odoo-app"
+                required />
+            </div>
+            <div class="mb-3">
+              <label
+                for="odooVersion"
+                class="form-label"
+                data-translate-key="odooVersionLabel"
+                >Odoo Version *</label
+              >
+              <input
+                type="text"
+                id="odooVersion"
+                class="form-control"
+                placeholder="17.0"
+                value="17.0"
+                required />
+            </div>
+            <div class="mb-3">
+              <label
+                for="dbServiceName"
+                class="form-label"
+                data-translate-key="dbServiceNameLabel"
+                >Database Service Name *</label
+              >
+              <input
+                type="text"
+                id="dbServiceName"
+                class="form-control"
+                placeholder="e.g., odoo-postgres-db"
+                value="db-odoo"
+                required />
+            </div>
+            <div class="mb-3">
+              <label
+                for="postgresVersion"
+                class="form-label"
+                data-translate-key="postgresVersionLabel"
+                >Postgres Version *</label
+              >
+              <input
+                type="text"
+                id="postgresVersion"
+                class="form-control"
+                placeholder="16"
+                value="16"
+                required />
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4
+              class="form-section-title"
+              data-translate-key="dbCredentialsTitle">
+              Database Credentials
+            </h4>
+            <div class="form-check form-switch mb-3">
+              <input
+                type="checkbox"
+                id="useCustomDbEnv"
+                class="form-check-input"
+                checked />
+              <label
+                class="form-check-label"
+                for="useCustomDbEnv"
+                data-translate-key="customizeDbVarsLabel"
+                >Customize Odoo DB Variables</label
+              >
+            </div>
+            <div id="dbEnvFields">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label
+                    for="odooDbPort"
+                    class="form-label"
+                    data-translate-key="odooDbPortLabel"
+                    >ODOO_DB_PORT</label
+                  >
+                  <input
+                    type="number"
+                    id="odooDbPort"
+                    class="form-control"
+                    value="5432" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label
+                    for="odooDbUser"
+                    class="form-label"
+                    data-translate-key="odooDbUserLabel"
+                    >ODOO_DB_USER</label
+                  >
+                  <input
+                    type="text"
+                    id="odooDbUser"
+                    class="form-control"
+                    value="odoo" />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label
+                  for="odooDbPassword"
+                  class="form-label"
+                  data-translate-key="odooDbPasswordLabel"
+                  >ODOO_DB_PASSWORD</label
+                >
+                <div class="input-group">
+                  <input
+                    type="text"
+                    id="odooDbPassword"
+                    class="form-control"
+                    data-translate-key="generatePasswordPlaceholder"
+                    placeholder="Click 🔑 to generate" />
+                  <button
+                    type="button"
+                    id="genDbPwdBtn"
+                    class="btn btn-outline-secondary">
+                    <i class="bi bi-key-fill fs-5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4
+              class="form-section-title"
+              data-translate-key="addonsConfigTitle">
+              Addons Configuration
+            </h4>
+            <label class="form-label" data-translate-key="addonsPathsLabel"
+              >Addons Paths Selection</label
+            >
+            <div class="mb-3">
+              <div class="form-check form-switch mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="addonPath"
+                  id="addon1"
+                  value="/mnt/extra-addons"
+                  checked />
+                <label class="form-check-label" for="addon1"
+                  >/mnt/extra-addons</label
+                >
+              </div>
+              <div class="form-check form-switch mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="addonPath"
+                  id="addon2"
+                  value="/mnt/extra-addons/enterprise-addons"
+                  checked />
+                <label class="form-check-label" for="addon2"
+                  >/mnt/extra-addons/enterprise-addons</label
+                >
+              </div>
+              <div class="form-check form-switch mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="addonPath"
+                  id="addon3"
+                  value="/mnt/extra-addons/appstore-addons"
+                  checked />
+                <label class="form-check-label" for="addon3"
+                  >/mnt/extra-addons/appstore-addons</label
+                >
+              </div>
+              <div class="form-check form-switch mb-2">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="addonPath"
+                  id="addon4"
+                  value="/mnt/extra-addons/dawn-addons"
+                  checked />
+                <label class="form-check-label" for="addon4"
+                  >/mnt/extra-addons/dawn-addons</label
+                >
+              </div>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  name="addonPath"
+                  id="addon5"
+                  value="/mnt/extra-addons/oca-addons"
+                  checked />
+                <label class="form-check-label" for="addon5"
+                  >/mnt/extra-addons/oca-addons</label
+                >
+              </div>
+            </div>
+
+            <label
+              class="form-label mt-3"
+              data-translate-key="addonsMountModeLabel"
+              >Addons Mount Mode</label
+            >
+            <div
+              class="btn-group w-100"
+              role="group"
+              aria-label="Addons mode toggle">
+              <input
+                type="radio"
+                class="btn-check"
+                name="addonsMode"
+                id="prodMode"
+                value="produccion"
+                autocomplete="off"
+                checked />
+              <label
+                class="btn btn-outline-primary"
+                for="prodMode"
+                data-translate-key="productionButton"
+                ><i class="bi bi-shield-lock-fill"></i> Production</label
+              >
+
+              <input
+                type="radio"
+                class="btn-check"
+                name="addonsMode"
+                id="devMode"
+                value="desarrollo"
+                autocomplete="off" />
+              <label
+                class="btn btn-outline-primary"
+                for="devMode"
+                data-translate-key="developmentButton"
+                ><i class="bi bi-tools"></i> Development</label
+              >
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4
+              class="form-section-title"
+              data-translate-key="odooInternalsTitle">
+              Odoo Internals & Networking
+            </h4>
+            <div class="mb-3 form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="/var/lib/odoo"
+                id="mountDataDir"
+                checked />
+              <label
+                class="form-check-label"
+                for="mountDataDir"
+                data-translate-key="mountDataDirCheckbox"
+                >Mount /var/lib/odoo</label
+              >
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="xmlrpcPort"
+                  class="form-label"
+                  data-translate-key="xmlrpcPortLabel"
+                  >XML-RPC Port</label
+                >
+                <input
+                  type="number"
+                  id="xmlrpcPort"
+                  class="form-control"
+                  value="8069" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label
+                  for="longpollingPort"
+                  class="form-label"
+                  data-translate-key="longpollingPortLabel"
+                  >Longpolling Port</label
+                >
+                <input
+                  type="number"
+                  id="longpollingPort"
+                  class="form-control"
+                  value="8072" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label
+                for="odooDomain"
+                class="form-label"
+                data-translate-key="odooDomainLabel"
+                >Odoo Domain</label
+              >
+              <input
+                type="text"
+                id="odooDomain"
+                class="form-control"
+                placeholder="e.g., odoo.mydomain.com" />
+            </div>
+            <div class="row align-items-center">
+              <div class="col-md-7 mb-3">
+                <label
+                  for="logLevel"
+                  class="form-label"
+                  data-translate-key="logLevelLabel"
+                  >Log Level</label
+                >
+                <select id="logLevel" class="form-select">
+                  <option value="debug" selected>debug</option>
+                  <option value="info">info</option>
+                  <option value="warn">warn</option>
+                  <option value="error">error</option>
+                  <option value="critical">critical</option>
+                </select>
+              </div>
+              <div class="col-md-5 mb-3 form-check form-switch">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="proxyMode"
+                  checked />
+                <label
+                  class="form-check-label"
+                  for="proxyMode"
+                  data-translate-key="proxyModeLabel"
+                  >Proxy Mode</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="sticky-actions">
+            <button
+              type="button"
+              id="generateBtn"
+              class="btn btn-success w-100 btn-lg"
+              data-translate-key="generateConfigButton">
+              <i class="bi bi-rocket-launch-fill"></i> Generate Configuration
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
