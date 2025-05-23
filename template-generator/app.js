@@ -1,7 +1,7 @@
 // --- Translations ---
 const translations = {
   es: {
-    appTitle: 'Odoo Configurator Pro+',
+    appTitle: 'Odoo EasyPanel Temple App',
     languageLabel: 'Idioma:',
     darkModeLabel: 'Modo Oscuro', // Visually hidden, but good for accessibility
     generatedConfigTitle: 'Configuración Generada',
@@ -40,7 +40,7 @@ const translations = {
     jsonOutputPlaceholderGenerated: 'Tu JSON aparecerá aquí...',
   },
   en: {
-    appTitle: 'Odoo Configurator Pro+',
+    appTitle: 'Odoo EasyPanel Temple App',
     languageLabel: 'Language:',
     darkModeLabel: 'Dark Mode', // Visually hidden
     generatedConfigTitle: 'Generated Configuration',
@@ -367,22 +367,22 @@ document.addEventListener('DOMContentLoaded', () => {
     odooAppService.domains = [];
     if (odooDomainValue) {
       odooAppService.domains.push({
-        host: `$(PROJECT_NAME).${odooDomainValue}`,
+        host: `${odooDomainValue}`,
         https: true,
         port: parseInt(xmlrpcPortInput.value.trim()),
         path: '/',
         middlewares: [],
-        certificateResolver: 'letsencrypt',
+        certificateResolver: '',
         wildcard: false,
         internalProtocol: 'http',
       });
       odooAppService.domains.push({
-        host: `$(PROJECT_NAME).${odooDomainValue}`,
+        host: `${odooDomainValue}`,
         https: true,
         port: parseInt(longpollingPortInput.value.trim()),
         path: '/longpolling',
         middlewares: [],
-        certificateResolver: 'letsencrypt',
+        certificateResolver: '',
         wildcard: false,
         internalProtocol: 'http',
       });
