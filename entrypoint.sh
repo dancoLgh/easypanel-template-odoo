@@ -1,33 +1,63 @@
 #!/bin/bash
+# entrypoint.sh
 
-# Ruta del archivo de configuración que vamos a generar
+# Ruta donde generaremos el odoo.conf
 ODOO_CONF="/etc/odoo/odoo.conf"
 
-echo "[options]" > $ODOO_CONF
-
+# Variables por defecto (puedes sobreescribirlas al levantar el contenedor)
 : "${ODOO_XMLRPC_PORT:=8069}"
 : "${ODOO_LONGPOLLING_PORT:=8072}"
 : "${ODOO_PROXY_MODE:=True}"
 : "${ODOO_LOG_LEVEL:=info}"
 : "${ODOO_DATA_DIR:=/var/lib/odoo}"
+: "${ODOO_SESSIONS_DIR:=${ODOO_DATA_DIR}/sessions}"
+: "${ODOO_SESSION_STORE:=file}"
 : "${ODOO_ADDONS_PATH:=/mnt/extra-addons}"
 
-echo "addons_path = ${ODOO_ADDONS_PATH}" >> $ODOO_CONF
-echo "data_dir = ${ODOO_DATA_DIR}" >> $ODOO_CONF
-echo "xmlrpc_port = ${ODOO_XMLRPC_PORT}" >> $ODOO_CONF
-echo "longpolling_port = ${ODOO_LONGPOLLING_PORT}" >> $ODOO_CONF
-echo "proxy_mode = ${ODOO_PROXY_MODE}" >> $ODOO_CONF
-echo "log_level = ${ODOO_LOG_LEVEL}" >> $ODOO_CONF
+# Opcionales para PostgreSQL (exportar DB_HOST, DB_PORT, DB_USER, DB_PASSWORD)
+: "${ODOO_DB_HOST:=}"
+: "${ODOO_DB_PORT:=}"
+: "${ODOO_DB_USER:=}"
+: "${ODOO_DB_PASSWORD:=}"
 
-# Otras posibles variables que quieras agregar
-[[ -n "$ODOO_DB_HOST" ]] && echo "db_host = ${ODOO_DB_HOST}" >> $ODOO_CONF
-[[ -n "$ODOO_DB_PORT" ]] && echo "db_port = ${ODOO_DB_PORT}" >> $ODOO_CONF
-[[ -n "$ODOO_DB_USER" ]] && echo "db_user = ${ODOO_DB_USER}" >> $ODOO_CONF
-[[ -n "$ODOO_DB_PASSWORD" ]] && echo "db_password = ${ODOO_DB_PASSWORD}" >> $ODOO_CONF
+# 1. Generar configuración
+cat > $ODOO_CONF <<EOF
+[options]
+addons_path = ${ODOO_ADDONS_PATH}
+data_dir = ${ODOO_DATA_DIR}
+xmlrpc_port = ${ODOO_XMLRPC_PORT}
+longpolling_port = ${ODOO_LONGPOLLING_PORT}
+proxy_mode = ${ODOO_PROXY_MODE}
+log_level = ${ODOO_LOG_LEVEL}
 
-echo "Archivo odoo.conf generado:"
+; sesiones en disco
+sessions_dir = ${ODOO_SESSIONS_DIR}
+session_store = ${ODOO_SESSION_STORE}
+EOF
+
+# 2. Si se han pasado credenciales DB, agregarlas
+if [[ -n "$ODOO_DB_HOST" ]]; then
+  echo "db_host = ${ODOO_DB_HOST}" >> $ODOO_CONF
+fi
+if [[ -n "$ODOO_DB_PORT" ]]; then
+  echo "db_port = ${ODOO_DB_PORT}" >> $ODOO_CONF
+fi
+if [[ -n "$ODOO_DB_USER" ]]; then
+  echo "db_user = ${ODOO_DB_USER}" >> $ODOO_CONF
+fi
+if [[ -n "$ODOO_DB_PASSWORD" ]]; then
+  echo "db_password = ${ODOO_DB_PASSWORD}" >> $ODOO_CONF
+fi
+
+# 3. Mostrar el archivo generado (útil para depuración)
+echo "=== odoo.conf generado ==="
 cat $ODOO_CONF
-echo ""
+echo "=========================="
 
-# Ejecutar el comando original de Odoo
+# 4. Asegurar que exista y tenga permisos el directorio de sesiones
+mkdir -p "${ODOO_SESSIONS_DIR}"
+chown -R odoo:odoo "${ODOO_SESSIONS_DIR}"
+chmod 700 "${ODOO_SESSIONS_DIR}"
+
+# 5. Ejecutar Odoo con la configuración creada
 exec odoo -c $ODOO_CONF

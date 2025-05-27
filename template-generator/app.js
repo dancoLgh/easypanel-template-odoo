@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
     odooAppService.mounts = [
       {
         type: 'volume',
-        name: `${appName}-odoo-config`,
+        name: `odoo-config`,
         mountPath: '/etc/odoo',
       },
     ];
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mountDataDirChk.checked && dataDirValue) {
       odooAppService.mounts.unshift({
         type: 'volume',
-        name: `${appName}-odoo-data`,
+        name: `odoo-data`,
         mountPath: dataDirValue,
       });
     }
