@@ -33,10 +33,10 @@ log_level = ${ODOO_LOG_LEVEL}
 
 workers = 7
 max_cron_threads = 2
-limit_memory_soft = 3145728000   ;  3 GB
-limit_memory_hard = 3435973836   ; ~3.2 GB
-limit_time_cpu = 120             ; 120 seg CPU
-limit_time_real = 240            ; 240 seg real
+limit_memory_soft = 3145728000
+limit_memory_hard = 3435973836
+limit_time_cpu = 120       
+limit_time_real = 240        
 
 ; sesiones en disco
 sessions_dir = ${ODOO_SESSIONS_DIR}
