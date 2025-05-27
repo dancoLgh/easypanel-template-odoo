@@ -30,6 +30,7 @@ const translations = {
     xmlrpcPortLabel: 'Puerto XML-RPC',
     longpollingPortLabel: 'Puerto Longpolling',
     odooDomainLabel: 'Dominio Odoo',
+    easypanelDomainLabel: 'Dominio Easypanel',
     logLevelLabel: 'Nivel de Log',
     proxyModeLabel: 'Modo Proxy',
     generateConfigButton: 'Generar Configuración',
@@ -69,6 +70,7 @@ const translations = {
     xmlrpcPortLabel: 'XML-RPC Port',
     longpollingPortLabel: 'Longpolling Port',
     odooDomainLabel: 'Odoo Domain',
+    easypanelDomainLabel: 'Easypanel Domain',
     logLevelLabel: 'Log Level',
     proxyModeLabel: 'Proxy Mode',
     generateConfigButton: 'Generate Configuration',
@@ -218,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const proxyModeChk = document.getElementById('proxyMode');
   const logLevelSelect = document.getElementById('logLevel');
   const odooDomainInput = document.getElementById('odooDomain');
+  const easypanelDomainSubInput = document.getElementById('easypanelDomainSub');
 
   const generateBtn = document.getElementById('generateBtn');
   const copyBtn = document.getElementById('copyBtn');
@@ -371,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         https: true,
         port: parseInt(xmlrpcPortInput.value.trim()),
         path: '/',
-        middlewares: [],
+        middlewares: ['secure-headers@file', 'buffering-large-upload@file'],
         certificateResolver: '',
         wildcard: false,
         internalProtocol: 'http',
@@ -382,6 +385,21 @@ document.addEventListener('DOMContentLoaded', () => {
         port: parseInt(longpollingPortInput.value.trim()),
         path: '/longpolling',
         middlewares: [],
+        certificateResolver: '',
+        wildcard: false,
+        internalProtocol: 'http',
+      });
+    }
+
+    const easypanelDomainSubValue = easypanelDomainSubInput.value.trim();
+    if (easypanelDomainSubValue) {
+      const easypanelFullHost = `${easypanelDomainSubValue}.0vchio.easypanel.host`;
+      odooAppService.domains.push({
+        host: easypanelFullHost,
+        https: true,
+        port: 8069, // Fixed port for easypanel domain
+        path: '/',
+        middlewares: ['secure-headers@file', 'buffering-large-upload@file'], // Specified middlewares
         certificateResolver: '',
         wildcard: false,
         internalProtocol: 'http',

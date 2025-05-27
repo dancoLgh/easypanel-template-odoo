@@ -220,13 +220,14 @@ body.dark-mode .input-group-text {
 .sticky-actions {
   position: sticky;
   bottom: 0;
-  background: inherit;
+  background: inherit; /* Changed from var(--light-pane-bg) to inherit */
   padding: 15px 0;
   z-index: 10;
   border-top: 1px solid var(--light-border);
 }
 body.dark-mode .sticky-actions {
   border-top: 1px solid var(--dark-border);
+  /* background: inherit; ensures it matches --dark-pane-bg or --dark-card-bg if nested */
 }
 
 .options-pane .btn-group .btn {
