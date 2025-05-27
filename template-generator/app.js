@@ -339,8 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mountDataDirChk.checked && dataDirValue) {
       odooAppService.mounts.unshift({
         type: 'volume',
-        name: `odoo-data`,
-        mountPath: dataDirValue,
+        name: `odoo-web-data`,
+        mountPath: '/var/lib/odoo',
       });
     }
 
