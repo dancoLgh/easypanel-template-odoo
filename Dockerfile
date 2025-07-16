@@ -1,6 +1,6 @@
 # Dockerfile
 
-# 1. Usar la imagen base de Odoo 17
+# 1. Usar la imagen base de Odoo 18
 FROM odoo:18
 
 USER root
@@ -8,13 +8,17 @@ USER root
 # 2. Instalar dependencias del sistema y locales
 RUN apt-get update && apt-get install -y \
     locales \
+    python3-venv \
+    python3-pip \
   && rm -rf /var/lib/apt/lists/* \
   && echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen \
   && locale-gen es_ES.UTF-8 \
   && update-locale LANG=es_ES.UTF-8
 
-# 3. Instalar librerías Python
-RUN pip3 install \
+# 3. Crear entorno virtual e instalar paquetes
+RUN python3 -m venv /opt/venv \
+  && /opt/venv/bin/pip install --upgrade pip setuptools \
+  && /opt/venv/bin/pip install \
     woocommerce \
     pillow \
     dropbox \
@@ -25,17 +29,20 @@ RUN pip3 install \
     cachetools \
     shipday
 
-# 4. Crear directorio de datos y sesiones, y asignar permisos
+# 4. Añadir el entorno virtual al PATH 
+ENV PATH="/opt/venv/bin:$PATH"
+
+# 5. Crear directorio de datos y sesiones, y asignar permisos
 RUN mkdir -p /var/lib/odoo/sessions \
   && chown -R odoo:odoo /var/lib/odoo/sessions \
   && chmod 700 /var/lib/odoo/sessions
 
-# 5. Copiar el entrypoint y hacerlo ejecutable
+# 6. Copiar el entrypoint y hacerlo ejecutable
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# 6. Montar el volumen de datos (opcional, pero recomendable)
+# 7. Montar el volumen de datos (opcional, pero recomendable)
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
-# 7. Usar nuestro entrypoint
+# 8. Usar nuestro entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
