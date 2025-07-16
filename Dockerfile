@@ -1,7 +1,7 @@
 # Dockerfile
 
 # 1. Usar la imagen base de Odoo 17
-FROM odoo:17
+FROM odoo:18
 
 USER root
 
