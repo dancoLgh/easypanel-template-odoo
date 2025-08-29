@@ -23,7 +23,8 @@ RUN pip3 install \
     boto3 \
     paramiko \
     cachetools \
-    shipday
+    shipday \
+    openpyxl
 
 # 4. Crear directorio de datos y sesiones, y asignar permisos
 RUN mkdir -p /var/lib/odoo/sessions \
